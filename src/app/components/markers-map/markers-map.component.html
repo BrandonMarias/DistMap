@@ -1,0 +1,31 @@
+<ul class="list bg-base-100 rounded-box shadow-md">
+  <li class="p-4 pb-2 text-xs flex justify-between">
+    <h1 class="text-sm">Marks</h1>
+    <div class="tooltip" data-tip="Delete markers">
+      <button
+        class="btn btn-square btn-ghost bg-red-500"
+        (click)="removeAllMarkers.emit()"
+      >
+        <img src="delete.svg" alt="delete" />
+      </button>
+    </div>
+  </li>
+
+  @for (position of markers(); track $index) {
+    <li class="list-row">
+      <div class="text-4xl font-thin opacity-30 tabular-nums">
+        {{ $index | plusOne }}
+      </div>
+      <div class="cursor-pointer" (click)="markSelected.emit($index)">
+        <div>Lat: {{ position.lat | number: "1.4-4" }}</div>
+        <div>Lng: {{ position.lng | number: "1.4-4" }}</div>
+      </div>
+      <button
+        class="btn btn-square btn-ghost"
+        (click)="removeMarker.emit($index)"
+      >
+        <img src="delete.svg" alt="delete" />
+      </button>
+    </li>
+  }
+</ul>

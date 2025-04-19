@@ -1,0 +1,12 @@
+<div #mapContainer class="h-[100%] w-[100%]">
+  <google-map
+    #map
+    id="map"
+    [center]="center()"
+    [zoom]="zoom()"
+    [options]="options()"
+    class="w-full h-full"
+  >
+    <map-marker [position]="center()" [options]="{ draggable: false }" />
+  </google-map>
+</div>
