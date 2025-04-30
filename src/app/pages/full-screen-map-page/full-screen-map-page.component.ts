@@ -5,30 +5,27 @@ import {
   viewChild,
 } from '@angular/core';
 import { GoogleMap, GoogleMapsModule } from '@angular/google-maps';
-// import { environment } from '../../../environments/environment';
-import { DecimalPipe, JsonPipe } from '@angular/common';
 import { MarkersMapComponent } from '../../components/markers-map/markers-map.component';
 import { MarkersService } from '../../services/markers.service';
 import { PlusOnePipe } from '../../pipes/plus-one.pipe';
-// import html2canvas from 'html2canvas';
-// import * as htmlToImage from 'html-to-image';
+import { NavbarComponent } from "../../shared/components/navbar/navbar.component";
+import { DistanceKmPipe } from '../../pipes/distanceKm.pipe';
 
 @Component({
   selector: 'app-full-screen-map-page',
   imports: [
     GoogleMapsModule,
-    JsonPipe,
-    DecimalPipe,
     PlusOnePipe,
     MarkersMapComponent,
-  ],
+    NavbarComponent,
+    DistanceKmPipe
+],
   templateUrl: './full-screen-map-page.component.html',
 })
 export class FullScreenMapPageComponent {
   markersService = inject(MarkersService);
   // mapsApiKey = environment.mapsApiKey;
   mapElement = viewChild<GoogleMap>('map');
-  // mapContainer = viewChild<ElementRef>('mapContainer');
   zoom = signal(14);
 
   center = signal<google.maps.LatLngLiteral>({
@@ -83,5 +80,4 @@ export class FullScreenMapPageComponent {
     this.markersService.removeAllMarkerPositions();
   }
 
-  handleMapShot() {}
 }
