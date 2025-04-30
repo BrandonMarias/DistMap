@@ -1,41 +1,43 @@
 <app-navbar></app-navbar>
-<div #mapContainer class="h-[60vh] sm:h-[90vh]">
-  <google-map
-    #map
-    id="map"
-    [center]="center()"
-    [zoom]="zoom()"
-    [options]="options()"
-    [width]="'100vw'"
-    [height]="'100%'"
-    (zoomChanged)="zoomChanged()"
-    (idle)="centerChanged()"
-    (mapClick)="handleClick($event)"
-  >
-    @for (position of markersService.getMarkerPositions(); track $index) {
-      <map-marker
-        [position]="position"
-        [options]="{ draggable: true }"
-        [label]="$index | plusOne"
-        (mapDragend)="handleDragEnd($event, $index)"
+@if (mapLoaded()) {
+  <div #mapContainer class="h-[60vh] sm:h-[90vh]">
+    <google-map
+      #map
+      id="map"
+      [center]="center()"
+      [zoom]="zoom()"
+      [options]="options()"
+      [width]="'100vw'"
+      [height]="'100%'"
+      (zoomChanged)="zoomChanged()"
+      (idle)="centerChanged()"
+      (mapClick)="handleClick($event)"
+    >
+      @for (position of markersService.getMarkerPositions(); track $index) {
+        <map-marker
+          [position]="position"
+          [options]="{ draggable: true }"
+          [label]="$index | plusOne"
+          (mapDragend)="handleDragEnd($event, $index)"
+        />
+      }
+
+      <map-polyline
+        [path]="markersService.getMarkerPositions()"
+        [options]="{ strokeColor: 'red', strokeWeight: 5 }"
+        [textContent]="'Route'"
       />
-    }
+    </google-map>
+  </div>
+}
 
-    <map-polyline
-      [path]="markersService.getMarkerPositions()"
-      [options]="{ strokeColor: 'red', strokeWeight: 5 }"
-      [textContent]="'Route'"
-    />
-  </google-map>
-</div>
-
-  <section class="sm:card sm:p-5 pt-5 ps-5 sm:fixed sm:bottom-15 sm:left-2 sm:shadow-2xl w-full sm:w-80 bg-base-100">
-    <h2 class="text-xl font-bold p-2.5">
-      Distance: {{ markersService.getDistanceBetweenMarkers() | distanceKm }}
-    </h2>
-  </section>
-
-
+<section
+  class="sm:card sm:p-5 pt-5 ps-5 sm:fixed sm:bottom-15 sm:left-2 sm:shadow-2xl w-full sm:w-80 bg-base-100"
+>
+  <h2 class="text-xl font-bold p-2.5">
+    Distance: {{ markersService.getDistanceBetweenMarkers() | distanceKm }}
+  </h2>
+</section>
 
 @if (markersService.getMarkerPositions().length > 0) {
   <section

@@ -1,6 +1,7 @@
 import {
   Component,
   inject,
+  OnInit,
   signal,
   viewChild,
 } from '@angular/core';
@@ -10,6 +11,7 @@ import { MarkersService } from '../../services/markers.service';
 import { PlusOnePipe } from '../../pipes/plus-one.pipe';
 import { NavbarComponent } from "../../shared/components/navbar/navbar.component";
 import { DistanceKmPipe } from '../../pipes/distanceKm.pipe';
+import { GoogleMapsLoaderService } from '../../services/google-maps-loader.service';
 
 @Component({
   selector: 'app-full-screen-map-page',
@@ -22,11 +24,18 @@ import { DistanceKmPipe } from '../../pipes/distanceKm.pipe';
 ],
   templateUrl: './full-screen-map-page.component.html',
 })
-export class FullScreenMapPageComponent {
+export class FullScreenMapPageComponent implements OnInit {
   markersService = inject(MarkersService);
+  googleMapsLoader = inject(GoogleMapsLoaderService);
+  ngOnInit(): void {
+    this.googleMapsLoader.load().then(() => {
+      this.mapLoaded.set(true);
+    });
+  }
   // mapsApiKey = environment.mapsApiKey;
   mapElement = viewChild<GoogleMap>('map');
   zoom = signal(14);
+  mapLoaded = signal(false);
 
   center = signal<google.maps.LatLngLiteral>({
     lat: 18.920206978089375,

@@ -1,21 +1,14 @@
-import { effect, inject, Injectable, OnInit, signal } from '@angular/core';
-import { GoogleMapsLoaderService } from './google-maps-loader.service';
+import { effect, Injectable, signal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
-export class MarkersService implements OnInit{
-
-  googleMapsLoader = inject(GoogleMapsLoaderService);
-
+export class MarkersService {
   constructor() {
     const markerPositions = localStorage.getItem('markerPositions');
     if (markerPositions) {
       this.markerPositions.set(JSON.parse(markerPositions));
     }
-  }
-  async ngOnInit() {
-    await this.googleMapsLoader.load();
   }
 
   private markerPositions = signal<google.maps.LatLngLiteral[]>([]);
@@ -89,6 +82,5 @@ export class MarkersService implements OnInit{
       totalDistance += distance;
     }
     return totalDistance;
-
-  }
+  };
 }
