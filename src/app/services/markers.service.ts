@@ -1,14 +1,21 @@
-import { effect, Injectable, signal } from '@angular/core';
+import { effect, inject, Injectable, OnInit, signal } from '@angular/core';
+import { GoogleMapsLoaderService } from './google-maps-loader.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class MarkersService {
+export class MarkersService implements OnInit{
+
+  googleMapsLoader = inject(GoogleMapsLoaderService);
+
   constructor() {
     const markerPositions = localStorage.getItem('markerPositions');
     if (markerPositions) {
       this.markerPositions.set(JSON.parse(markerPositions));
     }
+  }
+  async ngOnInit() {
+    await this.googleMapsLoader.load();
   }
 
   private markerPositions = signal<google.maps.LatLngLiteral[]>([]);
