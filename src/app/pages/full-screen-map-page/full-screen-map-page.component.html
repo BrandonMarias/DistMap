@@ -29,7 +29,7 @@
   </google-map>
 </div>
 
-  <section class="sm:card p-5 sm:fixed sm:bottom-15 sm:left-2 sm:shadow-2xl w-full sm:w-80 bg-base-100">
+  <section class="sm:card sm:p-5 pt-5 ps-5 sm:fixed sm:bottom-15 sm:left-2 sm:shadow-2xl w-full sm:w-80 bg-base-100">
     <h2 class="text-xl font-bold p-2.5">
       Distance: {{ markersService.getDistanceBetweenMarkers() | distanceKm }}
     </h2>
@@ -39,7 +39,7 @@
 
 @if (markersService.getMarkerPositions().length > 0) {
   <section
-    class="card bg-base-100 p-5 sm:fixed sm:top-40 sm:left-2 shadow-2xl sm:w-80 w-full max-h-[32vh] sm:max-h-110 overflow-y-auto"
+    class="card bg-base-100 p-5 sm:fixed sm:top-40 sm:left-2 shadow-2xl sm:w-80 w-full max-h-[25vh] sm:max-h-110 overflow-y-auto"
   >
     <markers-map
       (markSelected)="handleMarkSelected($event)"
