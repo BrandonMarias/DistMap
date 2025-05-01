@@ -12,6 +12,7 @@ import { PlusOnePipe } from '../../pipes/plus-one.pipe';
 import { NavbarComponent } from "../../shared/components/navbar/navbar.component";
 import { DistanceKmPipe } from '../../pipes/distanceKm.pipe';
 import { GoogleMapsLoaderService } from '../../services/google-maps-loader.service';
+import { ShareButtonComponent } from "../../components/share-button/share-button.component";
 
 @Component({
   selector: 'app-full-screen-map-page',
@@ -20,7 +21,8 @@ import { GoogleMapsLoaderService } from '../../services/google-maps-loader.servi
     PlusOnePipe,
     MarkersMapComponent,
     NavbarComponent,
-    DistanceKmPipe
+    DistanceKmPipe,
+    ShareButtonComponent
 ],
   templateUrl: './full-screen-map-page.component.html',
 })

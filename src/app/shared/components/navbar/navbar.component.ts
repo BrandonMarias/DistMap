@@ -1,13 +1,9 @@
-import { Component, inject } from '@angular/core';
-import { Router,  } from '@angular/router';
+import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './navbar.component.html',
 })
-export class NavbarComponent {
-  router = inject(Router);
-
-
-}
+export class NavbarComponent {}

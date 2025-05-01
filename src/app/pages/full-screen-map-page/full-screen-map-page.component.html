@@ -34,9 +34,12 @@
 <section
   class="sm:card sm:p-5 pt-5 ps-5 sm:fixed sm:bottom-15 sm:left-2 sm:shadow-2xl w-full sm:w-80 bg-base-100"
 >
+<div class="flex justify-between">
   <h2 class="text-xl font-bold p-2.5">
-    Distance: {{ markersService.getDistanceBetweenMarkers() | distanceKm }}
+    Distance: {{ markersService.distanceBetweenMarkers() | distanceKm }}
   </h2>
+  <share-button></share-button>
+</div>
 </section>
 
 @if (markersService.getMarkerPositions().length > 0) {
