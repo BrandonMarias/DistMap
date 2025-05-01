@@ -11,9 +11,13 @@ export class PositionMapService {
   constructor() {
     if (this.hasPositionOnQueryParams()) {
       this.getPositionFromQueryParams();
+    } else {
+      this.getPositionFromLocalStorage();
     }
     if (this.hasZoomOnQueryParams()) {
       this.getZoomFromQueryParams();
+    } else {
+      this.getZoomFromLocalStorage();
     }
   }
 
@@ -57,26 +61,26 @@ export class PositionMapService {
     return queryParams['lat'] !== undefined && queryParams['lng'] !== undefined;
   }
 
-  // setPositionOnLocalStorage() {
+  setPositionOnLocalStorage( position: google.maps.LatLngLiteral) {
 
-  //     localStorage.setItem('mapPosition', JSON.stringify(this.mapPosition()));
-  // }
-  // getPositionFromLocalStorage() {
-  //   const position = localStorage.getItem('mapPosition') ?? '';
-  //   if (position) {
-  //     this.mapPosition.set(JSON.parse(position));
-  //   }
-  // }
+      localStorage.setItem('mapPosition', JSON.stringify(position));
+  }
+  getPositionFromLocalStorage() {
+    const position = localStorage.getItem('mapPosition') ?? '';
+    if (position) {
+      this.mapPosition.set(JSON.parse(position));
+    }
+  }
 
-  // setZoomOnLocalStorage() {
-  //   localStorage.setItem('mapZoom', JSON.stringify(this.mapZoom()));
-  // }
-  // getZoomFromLocalStorage() {
-  //   const zoom = localStorage.getItem('mapZoom');
-  //   if (zoom) {
-  //     this.mapZoom.set(JSON.parse(zoom));
-  //   }
-  // }
+  setZoomOnLocalStorage( zoom: number) {
+    localStorage.setItem('mapZoom', JSON.stringify(zoom));
+  }
+  getZoomFromLocalStorage() {
+    const zoom = localStorage.getItem('mapZoom');
+    if (zoom) {
+      this.mapZoom.set(JSON.parse(zoom));
+    }
+  }
 
   // Set and get zoom level from local storage and query params
   /* zoom level */

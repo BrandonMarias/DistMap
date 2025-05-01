@@ -74,10 +74,14 @@ private centerChangedSubject = new Subject<void>();
 
 
   zoomChanged = () => {
+    this.positionMapService.setZoomOnLocalStorage(this.mapElement()?.getZoom() ?? 0);
     this.zoomChangedSubject.next();
   };;
 
   centerChanged() {
+    this.positionMapService.setPositionOnLocalStorage(
+      this.mapElement()?.getCenter()?.toJSON() ?? { lat: 0, lng: 0 },
+    );
     this.centerChangedSubject.next();
   }
 
