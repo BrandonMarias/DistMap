@@ -1,11 +1,14 @@
 import {
   Component,
   inject,
+  linkedSignal,
   OnInit,
   signal,
   viewChild,
 } from '@angular/core';
 import { GoogleMap, GoogleMapsModule } from '@angular/google-maps';
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 import { MarkersMapComponent } from '../../components/markers-map/markers-map.component';
 import { MarkersService } from '../../services/markers.service';
 import { PlusOnePipe } from '../../pipes/plus-one.pipe';
@@ -13,6 +16,7 @@ import { NavbarComponent } from "../../shared/components/navbar/navbar.component
 import { DistanceKmPipe } from '../../pipes/distanceKm.pipe';
 import { GoogleMapsLoaderService } from '../../services/google-maps-loader.service';
 import { ShareButtonComponent } from "../../components/share-button/share-button.component";
+import { PositionMapService } from '../../services/position-map.service';
 
 @Component({
   selector: 'app-full-screen-map-page',
@@ -29,38 +33,52 @@ import { ShareButtonComponent } from "../../components/share-button/share-button
 export class FullScreenMapPageComponent implements OnInit {
   markersService = inject(MarkersService);
   googleMapsLoader = inject(GoogleMapsLoaderService);
+  positionMapService = inject(PositionMapService);
+  private zoomChangedSubject = new Subject<void>();
+private centerChangedSubject = new Subject<void>();
+
   ngOnInit(): void {
     this.googleMapsLoader.load().then(() => {
       this.mapLoaded.set(true);
     });
+
+    this.zoomChangedSubject
+    .pipe(debounceTime(3000)) // espera 300ms de inactividad
+    .subscribe(() => {
+      this.positionMapService.setZoomOnQueryParams(this.mapElement()?.getZoom() ?? 0);
+    });
+
+  this.centerChangedSubject
+    .pipe(debounceTime(3000))
+    .subscribe(() => {
+      const center: google.maps.LatLngLiteral = {
+        lat: this.mapElement()?.getCenter()?.lat() ?? 0,
+        lng: this.mapElement()?.getCenter()?.lng() ?? 0,
+      };
+      this.positionMapService.setPositionOnQueryParams(center);
+    });
   }
   // mapsApiKey = environment.mapsApiKey;
   mapElement = viewChild<GoogleMap>('map');
-  zoom = signal(14);
+  zoom = linkedSignal<number>(() => this.positionMapService.zoom());
   mapLoaded = signal(false);
 
-  center = signal<google.maps.LatLngLiteral>({
-    lat: 18.920206978089375,
-    lng: -99.19595662660282,
-  });
+  center = linkedSignal<google.maps.LatLngLiteral>( () => this.positionMapService.centerPosition())
 
-  currentCenter = signal<google.maps.LatLngLiteral>(this.center());
 
   options = signal<google.maps.MapOptions>({
     mapId: 'roadmap',
     colorScheme: 'DARK',
   });
 
+
+
   zoomChanged = () => {
-    this.zoom.set(this.mapElement()?.getZoom() ?? 0);
-  };
+    this.zoomChangedSubject.next();
+  };;
 
   centerChanged() {
-    const center: google.maps.LatLngLiteral = {
-      lat: this.mapElement()?.getCenter()?.lat() ?? 0,
-      lng: this.mapElement()?.getCenter()?.lng() ?? 0,
-    };
-    this.currentCenter.set(center);
+    this.centerChangedSubject.next();
   }
 
   handleClick(event: google.maps.MapMouseEvent) {
@@ -89,6 +107,11 @@ export class FullScreenMapPageComponent implements OnInit {
 
   handleRemoveAllMarkers() {
     this.markersService.removeAllMarkerPositions();
+  }
+
+  ngOnDestroy(): void {
+    this.zoomChangedSubject.complete();
+    this.centerChangedSubject.complete();
   }
 
 }
