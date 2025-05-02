@@ -2,6 +2,7 @@ import {
   Component,
   inject,
   linkedSignal,
+  OnDestroy,
   OnInit,
   signal,
   viewChild,
@@ -12,10 +13,10 @@ import { debounceTime } from 'rxjs/operators';
 import { MarkersMapComponent } from '../../components/markers-map/markers-map.component';
 import { MarkersService } from '../../services/markers.service';
 import { PlusOnePipe } from '../../pipes/plus-one.pipe';
-import { NavbarComponent } from "../../shared/components/navbar/navbar.component";
+import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 import { DistanceKmPipe } from '../../pipes/distanceKm.pipe';
 import { GoogleMapsLoaderService } from '../../services/google-maps-loader.service';
-import { ShareButtonComponent } from "../../components/share-button/share-button.component";
+import { ShareButtonComponent } from '../../components/share-button/share-button.component';
 import { PositionMapService } from '../../services/position-map.service';
 
 @Component({
@@ -26,16 +27,16 @@ import { PositionMapService } from '../../services/position-map.service';
     MarkersMapComponent,
     NavbarComponent,
     DistanceKmPipe,
-    ShareButtonComponent
-],
+    ShareButtonComponent,
+  ],
   templateUrl: './full-screen-map-page.component.html',
 })
-export class FullScreenMapPageComponent implements OnInit {
+export class FullScreenMapPageComponent implements OnInit, OnDestroy {
   markersService = inject(MarkersService);
   googleMapsLoader = inject(GoogleMapsLoaderService);
   positionMapService = inject(PositionMapService);
   private zoomChangedSubject = new Subject<void>();
-private centerChangedSubject = new Subject<void>();
+  private centerChangedSubject = new Subject<void>();
 
   ngOnInit(): void {
     this.googleMapsLoader.load().then(() => {
@@ -43,14 +44,14 @@ private centerChangedSubject = new Subject<void>();
     });
 
     this.zoomChangedSubject
-    .pipe(debounceTime(3000)) // espera 300ms de inactividad
-    .subscribe(() => {
-      this.positionMapService.setZoomOnQueryParams(this.mapElement()?.getZoom() ?? 0);
-    });
+      .pipe(debounceTime(3000))
+      .subscribe(() => {
+        this.positionMapService.setZoomOnQueryParams(
+          this.mapElement()?.getZoom() ?? 0,
+        );
+      });
 
-  this.centerChangedSubject
-    .pipe(debounceTime(3000))
-    .subscribe(() => {
+    this.centerChangedSubject.pipe(debounceTime(3000)).subscribe(() => {
       const center: google.maps.LatLngLiteral = {
         lat: this.mapElement()?.getCenter()?.lat() ?? 0,
         lng: this.mapElement()?.getCenter()?.lng() ?? 0,
@@ -58,25 +59,25 @@ private centerChangedSubject = new Subject<void>();
       this.positionMapService.setPositionOnQueryParams(center);
     });
   }
-  // mapsApiKey = environment.mapsApiKey;
   mapElement = viewChild<GoogleMap>('map');
   zoom = linkedSignal<number>(() => this.positionMapService.zoom());
   mapLoaded = signal(false);
 
-  center = linkedSignal<google.maps.LatLngLiteral>( () => this.positionMapService.centerPosition())
-
+  center = linkedSignal<google.maps.LatLngLiteral>(() =>
+    this.positionMapService.centerPosition(),
+  );
 
   options = signal<google.maps.MapOptions>({
     mapId: 'roadmap',
     colorScheme: 'DARK',
   });
 
-
-
   zoomChanged = () => {
-    this.positionMapService.setZoomOnLocalStorage(this.mapElement()?.getZoom() ?? 0);
+    this.positionMapService.setZoomOnLocalStorage(
+      this.mapElement()?.getZoom() ?? 0,
+    );
     this.zoomChangedSubject.next();
-  };;
+  };
 
   centerChanged() {
     this.positionMapService.setPositionOnLocalStorage(
@@ -117,5 +118,4 @@ private centerChangedSubject = new Subject<void>();
     this.zoomChangedSubject.complete();
     this.centerChangedSubject.complete();
   }
-
 }

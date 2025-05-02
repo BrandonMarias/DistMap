@@ -61,9 +61,8 @@ export class PositionMapService {
     return queryParams['lat'] !== undefined && queryParams['lng'] !== undefined;
   }
 
-  setPositionOnLocalStorage( position: google.maps.LatLngLiteral) {
-
-      localStorage.setItem('mapPosition', JSON.stringify(position));
+  setPositionOnLocalStorage(position: google.maps.LatLngLiteral) {
+    localStorage.setItem('mapPosition', JSON.stringify(position));
   }
   getPositionFromLocalStorage() {
     const position = localStorage.getItem('mapPosition') ?? '';
@@ -72,7 +71,7 @@ export class PositionMapService {
     }
   }
 
-  setZoomOnLocalStorage( zoom: number) {
+  setZoomOnLocalStorage(zoom: number) {
     localStorage.setItem('mapZoom', JSON.stringify(zoom));
   }
   getZoomFromLocalStorage() {
