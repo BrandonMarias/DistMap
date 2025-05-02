@@ -25,14 +25,13 @@
       <map-polyline
         [path]="markersService.getMarkerPositions()"
         [options]="{ strokeColor: 'red', strokeWeight: 5 }"
-        [textContent]="'Route'"
       />
     </google-map>
   </div>
 }
 
 <section
-  class="sm:card sm:p-5 pt-5 ps-5 sm:fixed sm:bottom-15 sm:left-2 sm:shadow-2xl w-full sm:w-80 bg-base-100"
+  class="sm:card sm:p-5 pt-5 px-5 sm:fixed sm:bottom-15 sm:left-2 sm:shadow-2xl w-full sm:w-80 bg-base-100"
 >
 <div class="flex justify-between">
   <h2 class="text-xl font-bold p-2.5">
@@ -40,11 +39,12 @@
   </h2>
   <share-button></share-button>
 </div>
+<div class="divider sm:hidden"></div>
 </section>
 
 @if (markersService.getMarkerPositions().length > 0) {
   <section
-    class="card bg-base-100 p-5 sm:fixed sm:top-40 sm:left-2 shadow-2xl sm:w-80 w-full max-h-[25vh] sm:max-h-110 overflow-y-auto"
+    class="card bg-base-100 p-5 sm:fixed sm:top-40 sm:left-2 shadow-2xl sm:w-80 w-full max-h-[60vh] sm:max-h-110 overflow-y-auto"
   >
     <markers-map
       (markSelected)="handleMarkSelected($event)"

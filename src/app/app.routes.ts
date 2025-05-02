@@ -11,7 +11,7 @@ export const routes: Routes = [
   {
     path: 'full-screen-map',
     component: FullScreenMapPageComponent,
-    title: 'Full Screen Map'
+    title: 'Dist Map'
   },
   {
     path: '**',
